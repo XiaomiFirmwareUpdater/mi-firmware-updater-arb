@@ -54,7 +54,7 @@ fi
 #Start
 if [ -s dl_links ]
 then
-wget -qq --progress=bar https://github.com/XiaomiFirmwareUpdater/xiaomi-flashable-firmware-creator/raw/master/create_flashable_firmware.sh && chmod +x create_flashable_firmware.sh
+wget -qq --progress=bar https://github.com/XiaomiFirmwareUpdater/xiaomi-flashable-firmware-creator/raw/arb/create_flashable_firmware.sh && chmod +x create_flashable_firmware.sh
 cat dl_links | while read link; do
 dl=$(echo $link | cut -d = -f2)
 zip=$(echo $dl | cut -d / -f5)
@@ -65,34 +65,16 @@ mkdir -p changelog/$ver/
 ./create_flashable_firmware.sh $zip
 rm $zip; done
 
-#Diff
-for file in *.zip; do version=$(echo $file | cut -d _ -f5)
-if [[ $file =~ ^[a-z]*_[a-z]*_[a-z]*_[A-Z0-9]*_V[0-9]*.[0-9]*.[0-9]*.[0-9]*.[A-Z][A-Z][A-Z]MI[A-Z][A-Z]_[a-z0-9]*_[0-9]*.[0-9]*.[a-z]*$ ]]; then
-    echo "Generating diff from global rom zip"
-    oldversion=$(ls changelog/ | sort | grep MI | head -n2 | tail -n1)
-elif [[ $file =~ ^[a-z]*_[a-z]*_[a-z]*_[A-Z0-9]*_V[0-9]*.[0-9]*.[0-9]*.[0-9]*.[A-Z][A-Z][A-Z]CN[A-Z][A-Z]_[a-z0-9]*_[0-9]*.[0-9]*.[a-z]*$ ]]; then
-    echo "Generating diff from chinese rom zip"
-    oldversion=$(ls changelog/ | sort | grep CN | head -n2 | tail -n1)
-else
-    echo "Generating diff from weekly rom zip"
-    oldversion=$(ls changelog/ | sort | head -n2 | tail -n1)
-fi
-diff changelog/$oldversion/*.log changelog/$version/*.log > changelog/$version/$oldversion-$version.diff
-done
-
 #Upload
 mkdir -p ~/.ssh  &&  echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
 echo Uploading Files:
-for file in *.zip; do product=$(echo $file | cut -d _ -f2); version=$(echo $file | cut -d _ -f5 | cut -d . -f1); sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/frs/project/xiaomi-firmware-updater/Stable/$version/$product/ ; done
-for file in *.zip; do product=$(echo $file | cut -d _ -f2); version=$(echo $file | cut -d _ -f5 | cut -d . -f1); wput $file ftp://$afhuser:$afhpass@uploads.androidfilehost.com//Xiaomi-Firmware/Stable/$version/$product/ ; done
+for file in *.zip; do product=$(echo $file | cut -d _ -f2); version=$(echo $file | cut -d _ -f5 | cut -d . -f1); sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/frs/project/xiaomi-firmware-updater/non-arb/$version/$product/ ; done
 
 #Push
 echo Pushing:
 git config --global user.email "$gitmail" ; git config --global user.name "$gituser"
-git add miuiversion changelog/ ; git commit -m "Sync: $(date +%d.%m.%Y)"
-export GIT_TAG=$TRAVIS_BRANCH-$(date +%d.%m.%Y)
-git tag $GIT_TAG -a -m "Sync: $(date +%d.%m.%Y), upload firmware from $(cat updates | tr '\n' '&') MIUI ROM"
-git push -q --follow-tags https://$GIT_OAUTH_TOKEN_XFU@github.com/XiaomiFirmwareUpdater/$repo.git HEAD:$branch
+git add miuiversion ; git commit -m "Sync: $(date +%d.%m.%Y)"
+git push -q https://$GIT_OAUTH_TOKEN_XFU@github.com/XiaomiFirmwareUpdater/$repo.git HEAD:$branch
 
 #Telegram
 wget -q https://github.com/yshalsager/telegram.sh/raw/master/telegram && chmod +x telegram
@@ -103,7 +85,6 @@ for file in *.zip; do
 	android=$(echo $file | cut -d _ -f7 | cut -d . -f1,2)
 	size=$(du -h $file | awk '{print $1}')
 	md5=$(md5sum $file | awk '{print $1}')
-	changelog=$(ls changelog/$version/*.diff)
 	./telegram -t $bottoken -c @XiaomiFirmwareUpdater -M "New stable fimware update available!
 	*Device*: $model
 	*Codename*: $codename
@@ -113,8 +94,7 @@ for file in *.zip; do
 	*Filesize*: $size
 	*MD5*: $md5
 	*Download Links*:
-	[Sourceforge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/Stable/V9/) - [Github](https://github.com/XiaomiFirmwareUpdater/firmware_xiaomi_$codename/releases/tag/$GIT_TAG)
-	*Changelog*: [Here](https://github.com/XiaomiFirmwareUpdater/$repo/blob/$branch/$changelog)
+	[Sourceforge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/non-arb/V9/))
 	@XiaomiFirmwareUpdater | @MIUIUpdatesTracker"
 done
 else
