@@ -74,7 +74,7 @@ cd /home/frs/project/xiaomi-firmware-updater/non-arb/
 mkdir $version
 quit
 EOF
-sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/frs/project/xiaomi-firmware-updater/Developer/$version/$product/ ; done
+sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/frs/project/xiaomi-firmware-updater/non-arb/$version/$product/ ; done
 
 #Push
 echo Pushing:
