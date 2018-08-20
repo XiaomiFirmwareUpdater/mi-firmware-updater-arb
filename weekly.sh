@@ -78,8 +78,7 @@ sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/
 
 #Push
 echo Pushing:
-git config --global user.email "$gitmail" ; git config --global user.name "$gituser"
-git add miuiversion ; git commit -m "Sync: $(date +%d.%m.%Y)"
+git add miuiversion ; git commit --author="$gituser <$gitmail>" -m "Sync: $(date +%d.%m.%Y)"
 git push -q https://$GIT_OAUTH_TOKEN_XFU@github.com/XiaomiFirmwareUpdater/$repo.git HEAD:$branch
 
 #Telegram
@@ -100,7 +99,7 @@ for file in *.zip; do
 	*Filesize*: $size
 	*MD5*: $md5
 	*Download Links*:
-	[Sourceforge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/non-arb/$version/) - [Github](https://github.com/XiaomiFirmwareUpdater/firmware_xiaomi_$codename/releases/tag/$GIT_TAG)
+	[Sourceforge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/non-arb/$version/)
 	@XiaomiFirmwareUpdater | @MIUIUpdatesTracker"
 done
 else
