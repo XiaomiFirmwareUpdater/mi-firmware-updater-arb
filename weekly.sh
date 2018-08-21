@@ -78,7 +78,7 @@ sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/
 
 #Push
 echo Pushing:
-git add miuiversion ; git commit --author="$gituser <$gitmail>" -m "Sync: $(date +%d.%m.%Y)"
+git add miuiversion ; git -c "user.name=$gituser" -c "user.email=$gitmail" commit -m "Sync: $(date +%d.%m.%Y)"
 git push -q https://$GIT_OAUTH_TOKEN_XFU@github.com/XiaomiFirmwareUpdater/$repo.git HEAD:$branch
 
 #Telegram
