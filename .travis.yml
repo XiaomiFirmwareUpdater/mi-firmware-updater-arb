@@ -1,0 +1,22 @@
+sudo: required
+
+before_install:
+  - sudo apt-get -qq install wput sshpass
+  - git clone https://github.com/XiaomiFirmwareUpdater/mi-firmware-updater-arb.git -b nitrogen_stable $HOME/XFU/
+  - cd $HOME/XFU/ && wget -q https://github.com/XiaomiFirmwareUpdater/mi-firmware-updater-arb/raw/stable/stable.sh
+
+script:
+  - chmod +x device.sh script.sh
+  - "travis_wait 50 sleep 1800 &"
+  - ./device.sh
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+
+branches:
+  except:
+    - /^(?i:untagged)-.*$/
+    - /^(?i:weekly)-.*$/
+    - /^(?i:stable)-.*$/
