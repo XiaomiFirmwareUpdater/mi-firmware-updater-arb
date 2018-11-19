@@ -82,7 +82,7 @@ git add miuiversion ; git -c "user.name=$gituser" -c "user.email=$gitmail" commi
 git push -q https://$GIT_OAUTH_TOKEN_XFU@github.com/XiaomiFirmwareUpdater/$repo.git HEAD:$branch
 
 #Telegram
-wget -q https://github.com/yshalsager/telegram.sh/raw/master/telegram && chmod +x telegram
+wget -q https://github.com/fabianonline/telegram.sh/raw/master/telegram && chmod +x telegram
 for file in *.zip; do 
 	codename=$(echo $file | cut -d _ -f2)
 	model=$(echo $file | cut -d _ -f4)
@@ -90,7 +90,7 @@ for file in *.zip; do
 	android=$(echo $file | cut -d _ -f7 | cut -d . -f1,2)
 	size=$(du -h $file | awk '{print $1}')
 	md5=$(md5sum $file | awk '{print $1}')
-	./telegram -t $bottoken -c @XiaomiFirmwareUpdater -M "New weekly non-arb fimware update available!
+	./telegram -t $bottoken -c @XiaomiFirmwareUpdater -D -M "New weekly non-arb fimware update available!
 	*Device*: $model
 	*Codename*: $codename
 	*Version*: $version
