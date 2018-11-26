@@ -84,7 +84,7 @@ for file in *.zip; do
 	android=$(echo $file | cut -d _ -f7 | cut -d . -f1,2)
 	size=$(du -h $file | awk '{print $1}')
 	md5=$(md5sum $file | awk '{print $1}')
-	python telegram.py -t $bottoken -c @XiaomiFirmwareUpdater -D -M "New stable non-arb fimware update available!
+	python telegram.py -t $bottoken -c @XiaomiFirmwareUpdater -M "New stable non-arb fimware update available!
 	*Device*: $model
 	*Codename*: $codename
 	*Version*: $version
@@ -93,7 +93,7 @@ for file in *.zip; do
 	*Filesize*: $size
 	*MD5*: $md5
 	*Download Links*:
-	[Sourceforge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/non-arb/V9/)
+	[Sourceforge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/non-arb/)
 	@XiaomiFirmwareUpdater | @MIUIUpdatesTracker"
 done
 else
