@@ -66,9 +66,12 @@ python3 create_flashable_firmware.py -N $zip
 rm $zip; done
 
 #Upload
-mkdir -p ~/.ssh  &&  echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
+#mkdir -p ~/.ssh  &&  echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
 echo Uploading Files:
-for file in *.zip; do product=$(echo $file | cut -d _ -f2); version=$(echo $file | cut -d _ -f5 | cut -d . -f1); sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/frs/project/xiaomi-firmware-updater/non-arb/$version/$product/ ; done
+for file in *.zip; do product=$(echo $file | cut -d _ -f2); version=$(echo $file | cut -d _ -f5 | cut -d . -f1) 
+rclone copy -v sf:/home/frs/project/xiaomi-firmware-updater/non-arb/Stable/$version/$product/
+rclone copy -v osdn:/storage/groups/x/xi/xiaomifirmwareupdater/non-arb/Stable/$version/$product/
+done
 
 #Push
 echo Pushing:
@@ -81,6 +84,7 @@ for file in *.zip; do
 	codename=$(echo $file | cut -d _ -f2)
 	model=$(echo $file | cut -d _ -f4)
 	version=$(echo $file | cut -d _ -f5)
+	bigversion=$(echo $file | cut -d _ -f5 | cut -d . -f1)
 	android=$(echo $file | cut -d _ -f7 | cut -d . -f1,2)
 	size=$(du -h $file | awk '{print $1}')
 	md5=$(md5sum $file | awk '{print $1}')
@@ -93,7 +97,7 @@ for file in *.zip; do
 	*Filesize*: $size
 	*MD5*: $md5
 	*Download Links*:
-	[Sourceforge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/non-arb/)
+	[SourceFroge](https://sourceforge.net/projects/xiaomi-firmware-updater/files/non-arb/Stable/$bigversion/$codename/) - [Osdn](https://osdn.net/projects/xiaomifirmwareupdater/storage/non-arb/Stable/$bigversion/$codename/)
 	@XiaomiFirmwareUpdater | @MIUIUpdatesTracker"
 done
 else
