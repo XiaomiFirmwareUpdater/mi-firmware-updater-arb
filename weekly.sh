@@ -76,8 +76,8 @@ quit
 EOF
 sshpass -p $sfpass rsync -avP -e ssh $file yshalsager@web.sourceforge.net:/home/frs/project/xiaomi-firmware-updater/non-arb/$version/$product/ ; done'
 for file in *.zip; do product=$(echo $file | cut -d _ -f2); version=$(echo $file | cut -d _ -f5);
-rclone copy -v sf:/home/frs/project/xiaomi-firmware-updater/non-arb/Developer/$version/$product/
-rclone copy -v osdn:/storage/groups/x/xi/xiaomifirmwareupdater/non-arb/Developer/$version/$product/
+rclone copy -v $file sf:/home/frs/project/xiaomi-firmware-updater/non-arb/Developer/$version/$product/
+rclone copy -v $file osdn:/storage/groups/x/xi/xiaomifirmwareupdater/non-arb/Developer/$version/$product/
 done
 
 #Push
