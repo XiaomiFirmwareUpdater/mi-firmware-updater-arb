@@ -54,7 +54,7 @@ fi
 #Start
 if [ -s dl_links ]
 then
-wget -q https://github.com/XiaomiFirmwareUpdater/xiaomi-flashable-firmware-creator/raw/py/create_flashable_firmware.py
+wget -q https://github.com/XiaomiFirmwareUpdater/xiaomi-flashable-firmware-creator.py/raw/py/create_flashable_firmware.py
 cat dl_links | while read link; do
 dl=$(echo $link | cut -d = -f2)
 zip=$(echo $dl | cut -d / -f5)
@@ -75,7 +75,7 @@ done
 #Push
 echo Pushing:
 git add miuiversion ; git -c "user.name=$gituser" -c "user.email=$gitmail" commit -m "Sync: $(date +%d.%m.%Y)"
-git push -q https://$GIT_OAUTH_TOKEN_XFU@github.com/XiaomiFirmwareUpdater/$repo.git HEAD:$branch
+git push -q https://$XFU@github.com/XiaomiFirmwareUpdater/$repo.git HEAD:$branch
 
 #Telegram
 wget -q https://github.com/yshalsager/telegram.py/raw/master/telegram.py
